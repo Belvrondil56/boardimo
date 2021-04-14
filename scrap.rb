@@ -5,26 +5,26 @@ require "sqlite3"
 
 
 
-villes = {
+agences = {
   vannes: "https://simply-home.herokuapp.com",
   questembert: "https://simply-home-group.herokuapp.com",
   auray: "https://simply-home-cda.herokuapp.com"
 }
 
-page_questembert = URI.open("#{villes[:questembert]}/NosMaisons.php")
+page_questembert = URI.open("#{agences[:questembert]}/NosMaisons.php")
 scrap = Nokogiri::HTML(page_questembert)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
-db = SQLITE3::Database.new("boardimo.db")
+db = SQLite3::Database.new("boardimo.db")
 
 # QUESTEMBERT
 
 liens_maisons.each do |maison|
 
-  maison = URI.open("#{villes[:questembert]}/#{maison}")
+  maison = URI.open("#{agences[:questembert]}/#{maison}")
   scrap = Nokogiri::HTML(maison)
 
-  lien = "#{villes[:questembert]}/#{maison}"
+  lien = "#{agences[:questembert]}/#{maison}"
   nom = scrap.css(".title").children.text
   description = scrap.css(".houseDescription").children.text
   ville = scrap.css(".city").children.text
@@ -37,17 +37,17 @@ end
 
 # VANNES
 
-page_vannes = URI.open("#{villes[:vannes]}/house.php")
+page_vannes = URI.open("#{agences[:vannes]}/house.php")
 scrap = Nokogiri::HTML(page_vannes)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
 
 liens_maisons.each do |maison|
 
-  maison = URI.open("#{villes[:vannes]}/#{maison}")
+  maison = URI.open("#{agences[:vannes]}/#{maison}")
   scrap = Nokogiri::HTML(maison)
 
-  lien = "#{villes[:vannes]}/#{maison}"
+  lien = "#{agences[:vannes]}/#{maison}"
   nom = scrap.css("#titleSingleArticle h2").children.text
   description = scrap.css("#articleContent").children.text
   ville = scrap.css(".location").children.text
@@ -60,29 +60,42 @@ end
 
 # AURAY
 
-page_auray = URI.open("#{villes[:auray]}/pages/nosmaisons.php")
+page_auray = URI.open("#{agences[:auray]}/pages/nosmaisons.php")
 scrap = Nokogiri::HTML(page_auray)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
 
 liens_maisons.each do |maison|
 
-  maison = URI.open("#{villes[:auray]}/pages/#{maison}")
+  maison = URI.open("#{agences[:auray]}/pages/#{maison}")
   scrap = Nokogiri::HTML(maison)
 
-  lien = "#{villes[:auray]}/pages/#{maison}"
+  lien = "#{agences[:auray]}/pages/#{maison}"
   nom = scrap.css("h1").children.text
-  infos = scrap.css("#single-ad-description > div > p")
-  ville = infos[1].text
-  surface = infos[0].text
-  prix = infos[2].text
-  classe_nrg = infos[3].text
-  annee = infos[4].text
-  description = scrap.css("#single-ad-description > p:first-child").children.text
-
-  p description
+  stats = scrap.css("#single-ad-description > div > p")
+  surface = stats[0].text
+  ville = stats[1].text
+  prix = stats[2].text
+  classe_nrg[3].text
+  annee = stats[4].text
+  
+  descr = scrap.css("#single-ad-description > p")
+  description = descr .children[0].text  
 
 end
+
+
+sanitized_data =
+    maison_sanitizer.new(
+      lien: lien,
+      nom: nom,
+      description: description,
+      ville: ville,
+      surface: surface,
+      prix: prix,
+      classe_nrg: classe_nrg,
+      annee: annee
+    ).to_h
 
 #db.execute("INSERT OR IGNORE INTO house VALUES(nom, description, ville, surface, prix, classe_nrg, annee")
 
