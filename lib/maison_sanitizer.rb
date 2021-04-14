@@ -40,17 +40,14 @@ class MaisonSanitizer
           @data[:surface] = @data[:surface].split("m²").first.tr(' ','').to_i
         end
 
-        @data[:surface] = @data[:surface].to_s.tr(" ","").to_i
+        @data[:surface] = @data[:surface].to_s.tr(" ","").delete("^0-9").to_i
 
         @data[:surface]
     end
 
     def prix
-        if @data[:prix].to_s.include?("€")
-          @data[:prix] = @data[:prix].split("€").first.tr(' ','').to_i
-        end
-
-        @data[:prix] = @data[:prix].to_s.tr(" ","").to_i
+        
+        @data[:prix] = @data[:prix].to_s.tr(" ","").delete("^0-9").to_i
 
         @data[:prix]
     end
@@ -61,7 +58,7 @@ class MaisonSanitizer
 
 
     def annee
-        @data[:annee]
+        @data[:annee] = @data[:annee].delete("^0-9").to_i
     end
 
     

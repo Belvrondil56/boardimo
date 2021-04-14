@@ -23,8 +23,8 @@ db = SQLite3::Database.new("boardimo.db")
 
 liens_maisons.each do |maison|
 
-  maison = URI.open("#{agences[:questembert]}/#{maison}")
-  scrap = Nokogiri::HTML(maison)
+  page_questembert = URI.open("#{agences[:questembert]}/#{maison}")
+  scrap = Nokogiri::HTML(page_questembert)
 
   lien = "#{agences[:questembert]}/#{maison}"
   nom = scrap.css(".title").children.text
@@ -45,6 +45,8 @@ liens_maisons.each do |maison|
       classe_nrg: classe_nrg,
       annee: annee
     ).to_h
+
+    binding.pry
 
     db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
 
