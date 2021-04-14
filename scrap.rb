@@ -15,7 +15,7 @@ page_questembert = URI.open("#{villes[:questembert]}/NosMaisons.php")
 scrap = Nokogiri::HTML(page_questembert)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
-
+db = SQLITE3::Database.new("boardimo.db")
 
 # QUESTEMBERT
 
@@ -60,7 +60,7 @@ end
 
 # AURAY
 
-page_auray = URI.open("#{villes[:auray]}//pages/nosmaisons.php")
+page_auray = URI.open("#{villes[:auray]}/pages/nosmaisons.php")
 scrap = Nokogiri::HTML(page_auray)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
@@ -81,7 +81,10 @@ liens_maisons.each do |maison|
   description = scrap.css("#single-ad-description > p:first-child").children.text
 
   p description
+
 end
+
+#db.execute("INSERT OR IGNORE INTO house VALUES(nom, description, ville, surface, prix, classe_nrg, annee")
 
 
   # PREVIOUS DATA version :
