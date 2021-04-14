@@ -6,37 +6,76 @@ require "sqlite3"
 require "./lib/yacht_sanitizer"
 require "./lib/yacht"
 
-url = "https://greta-code-pizza.github.io/topsails/"
-html = URI.open(url)
-app = Nokogiri::HTML(html)
-db = SQLite3::Database.new("yachtDB.db")
 
-yachts = app.css('.card-boat')
+villes = {
+  vannes: "https://simply-home.herokuapp.com",
+  questembert: "https://simply-home-group.herokuapp.com",
+  auray: "https://simply-home-cda.herokuapp.com"
+}
 
-yachts.each do |yacht|
-  label = yacht.css("h4").children.text
+page_questembert = URI.open("#{villes[:questembert]}/NosMaisons.php")
+scrap = Nokogiri::HTML(page_questembert)
 
-  price = yacht.css(".price").children.text
-  # price = price.split("€").first.tr(' ', '').to_i
+liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
 
-  properties = yacht.css(".property")
 
-  # year = yacht.css(".property:nth-child(3) .badge").text
-  # year = properties.first.text.strip[-4..-1]
-  year = properties.first.css('.badge').text
+# QUESTEMBERT
 
-  # delete_suffix("m") meilleur que .text[0..-2]
-  # ex : boa = properties.last.css('.badge').text.delete_suffix("m").to_f
-  loa = properties[1].css('.badge').text
-  boa = properties.last.css('.badge').text
+liens_maisons.each do |maison|
 
-  condition = yacht.css(".card-text")
+  maison = URI.open("#{villes[:questembert]}/#{maison}")
+  scrap = Nokogiri::HTML(maison)
 
-  # condition_key = condition.children.text.split("en").last.split("état").first.strip
-  condition_key = 
-    ["très bon", "bon", "excellent"].find do |k| 
-      condition.children.text.include?(k) 
-    end
+  lien = "#{villes[:questembert]}/#{maison}"
+  nom = scrap.css(".title").children.text
+  description = scrap.css(".houseDescription").children.text
+  ville = scrap.css(".city").children.text
+  surface = scrap.css(".surface").children.text
+  prix = scrap.css(".price").children.text
+  classe_nrg = scrap.css(".energetics").children.text
+  annee = scrap.css(".year").children.text
+end
+
+
+# VANNES
+
+liens_maisons.each do |maison|
+
+  maison = URI.open("#{villes[:vannes]}/#{maison}")
+  scrap = Nokogiri::HTML(maison)
+
+  lien = "#{villes[:vannes]}/#{maison}"
+  nom = scrap.css("#titleSingleArticle h2").children.text
+  description = scrap.css("#articleContent").children.text
+  ville = scrap.css(".location").children.text
+  surface = scrap.css(".size").children.text
+  prix = scrap.css(".price").children.text
+  classe_nrg = scrap.css(".energy").children.text
+  annee = scrap.css(".foundation-years").children.text
+end
+
+
+# AURAY
+
+
+liens_maisons.each do |maison|
+
+  maison = URI.open("#{villes[:auray]}/pages/#{maison}")
+  scrap = Nokogiri::HTML(maison)
+
+  lien = "#{villes[:auray]}/pages/#{maison}"
+  nom = scrap.css("h1").children.text
+  infos = scrap.css("#single-ad-description > div > p")
+  ville = infos[1].text
+  surface = infos[0].text
+  prix = infos[2].text
+  classe_nrg = infos[3].text
+  annee = infos[4].text
+  description = scrap.css("#single-ad-description > p:first-child").children.text
+
+  p description
+end
+
 
   # PREVIOUS DATA version :
   #
@@ -51,15 +90,14 @@ yachts.each do |yacht|
   #   "condition" => condition_val
   # }
 
-  sanitized_data = 
-    YachtSanitizer.new(
-      label: label,
-      price: price,
-      year: year,
-      loa: loa,
-      boa: boa,
-      condition: condition_key
-    ).to_h
+  #sanitized_data = 
+   # YachtSanitizer.new(
+    #  label: label,
+     # price: price,
+      #year: year,
+      #loa: loa,
+      #boa: boa,
+      #condition: condition_key
+    #).to_h
 
-  db.execute("INSERT OR IGNORE INTO yacht VALUES (:label, :price, :year, :loa, :boa, :condition)", sanitized_data)
-end 
+  #db.execute("INSERT OR IGNORE INTO yacht VALUES (:label, :price, :year, :loa, :boa, :condition)", sanitized_data)

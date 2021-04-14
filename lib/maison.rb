@@ -1,4 +1,4 @@
-class Yacht
+class Maison
   CONDITIONS = {
     "bon" => 0,
     "très bon" => 1,

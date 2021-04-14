@@ -1,2 +1,0 @@
-class YachtSanitizer
-end
