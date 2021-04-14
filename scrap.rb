@@ -3,6 +3,8 @@ require "open-uri"
 require "pry"
 require "sqlite3"
 
+require "./lib/maison_sanitizer"
+
 
 
 agences = {
@@ -32,6 +34,20 @@ liens_maisons.each do |maison|
   prix = scrap.css(".price").children.text
   classe_nrg = scrap.css(".energetics").children.text
   annee = scrap.css(".year").children.text
+
+  sanitized_data =
+    MaisonSanitizer.new(
+      lien: lien,
+      nom: nom,
+      ville: ville,
+      surface: surface,
+      prix: prix,
+      classe_nrg: classe_nrg,
+      annee: annee
+    ).to_h
+
+    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+
 end
 
 
@@ -55,6 +71,20 @@ liens_maisons.each do |maison|
   prix = scrap.css(".price").children.text
   classe_nrg = scrap.css(".energy").children.text
   annee = scrap.css(".foundation-years").children.text
+
+  sanitized_data =
+    MaisonSanitizer.new(
+      lien: lien,
+      nom: nom,
+      ville: ville,
+      surface: surface,
+      prix: prix,
+      classe_nrg: classe_nrg,
+      annee: annee
+    ).to_h
+
+    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+
 end
 
 
@@ -80,16 +110,12 @@ liens_maisons.each do |maison|
   annee = stats[4].text
   
   descr = scrap.css("#single-ad-description > p")
-  description = descr .children[0].text  
+  description = descr .children[0].text
 
-end
-
-
-sanitized_data =
-    maison_sanitizer.new(
+  sanitized_data =
+    MaisonSanitizer.new(
       lien: lien,
       nom: nom,
-      description: description,
       ville: ville,
       surface: surface,
       prix: prix,
@@ -97,7 +123,12 @@ sanitized_data =
       annee: annee
     ).to_h
 
-#db.execute("INSERT OR IGNORE INTO house VALUES(nom, description, ville, surface, prix, classe_nrg, annee")
+    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+end
+
+
+
+#db.execute("INSERT OR IGNORE INTO house VALUES(:id ,:nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
 
 
   # PREVIOUS DATA version :

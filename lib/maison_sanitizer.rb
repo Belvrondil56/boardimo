@@ -1,4 +1,4 @@
-class maison_sanitizer
+class MaisonSanitizer
 
 
     def initialize(data)
@@ -16,7 +16,6 @@ class maison_sanitizer
     def call
       lien
       nom
-      description
       ville
       surface
       prix
@@ -24,16 +23,31 @@ class maison_sanitizer
       annee
     end
 
+    def lien
+        @data[:lien]
+    end
 
-    def annee
-        @data[:annee] = @data[:annee].to_i
+    def nom
+        @data[:nom]
+    end
 
-        @data[:annee]
+    def ville
+        @data[:ville]
+    end
+
+    def surface
+        if @data[:surface].to_s.include?("m²")
+          @data[:surface] = @data[:surface].split("m²").first.tr(' ','').to_i
+        end
+
+        @data[:surface] = @data[:surface].to_s.tr(" ","").to_i
+
+        @data[:surface]
     end
 
     def prix
-        if @data[:prix].to_s.include("€")
-          data[:prix] = @data[:prix].split("€").first.tr(' ','').to_i
+        if @data[:prix].to_s.include?("€")
+          @data[:prix] = @data[:prix].split("€").first.tr(' ','').to_i
         end
 
         @data[:prix] = @data[:prix].to_s.tr(" ","").to_i
@@ -41,12 +55,17 @@ class maison_sanitizer
         @data[:prix]
     end
 
-    def surface
-        if @data[:surface].to_s.include("m²")
-          data[:surface] = @data[:surface].split("m²").first.tr(' ','').to_i
-        end
-
-        @data[:surface] = @data[:surface].to_s.tr(" ","").to_i
-
-        @data[:surface]
+    def classe_nrg
+        @data[:classe_nrg]
     end
+
+
+    def annee
+        @data[:annee]
+    end
+
+    
+
+    
+
+end
