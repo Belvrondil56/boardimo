@@ -3,8 +3,6 @@ require "open-uri"
 require "pry"
 require "sqlite3"
 
-require "./lib/yacht_sanitizer"
-require "./lib/yacht"
 
 
 villes = {
