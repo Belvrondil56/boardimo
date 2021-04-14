@@ -37,6 +37,11 @@ end
 
 # VANNES
 
+page_vannes = URI.open("#{villes[:vannes]}/house.php")
+scrap = Nokogiri::HTML(page_vannes)
+
+liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
+
 liens_maisons.each do |maison|
 
   maison = URI.open("#{villes[:vannes]}/#{maison}")
@@ -55,6 +60,10 @@ end
 
 # AURAY
 
+page_auray = URI.open("#{villes[:auray]}//pages/nosmaisons.php")
+scrap = Nokogiri::HTML(page_auray)
+
+liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
 
 liens_maisons.each do |maison|
 
