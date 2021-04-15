@@ -38,15 +38,10 @@ class MaisonSanitizer
     end
 
     def surface
-        if @data[:surface].to_s.include?("m²")
-          @data[:surface] = @data[:surface].split("m²").first.tr(' ','').to_i
-        elsif @data[:surface].to_s.include?("m2")
-            @data[:surface] = @data[:surface].split("m2").first.tr(' ','').to_i
-        end
 
-        @data[:surface] = @data[:surface].to_s.tr(" ","").delete("^0-9").to_i
+        @data[:surface].slice!("m2") if @data[:surface].include?("m2")
 
-        @data[:surface]
+        @data[:surface] = @data[:surface].delete("^0-9").to_i
     end
 
     def prix
@@ -58,8 +53,12 @@ class MaisonSanitizer
 
     def classe_nrg
 
-        @data[:classe_nrg] = @data[:classe_nrg].tr('Classe énergie :','').scan(/A|B|C|D|E|F|G/).first if @data[:classe_nrg].include?("Classe")
-
+        if @data[:classe_nrg].include?("Classe")
+            @data[:classe_nrg] = @data[:classe_nrg].split
+            @data[:classe_nrg] = @data[:classe_nrg].last
+        else 
+            @data[:classe_nrg] = @data[:classe_nrg].scan(/[A-G]/).first
+        end
         @data[:classe_nrg]
 
     end
