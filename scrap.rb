@@ -32,7 +32,7 @@ liens_maisons.each do |maison|
   ville = scrap.css(".city").children.text
   surface = scrap.css(".surface").children.text
   prix = scrap.css(".price").children.text
-  classe_nrg = scrap.css(".energetics").children.text
+  classe_nrg = scrap.css(".energetic").children.text
   annee = scrap.css(".year").children.text
 
   sanitized_data =
@@ -48,7 +48,8 @@ liens_maisons.each do |maison|
 
     binding.pry
 
-    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+
+    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
 
 end
 
@@ -85,7 +86,9 @@ liens_maisons.each do |maison|
       annee: annee
     ).to_h
 
-    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+    binding.pry
+
+    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
 
 end
 
@@ -125,7 +128,9 @@ liens_maisons.each do |maison|
       annee: annee
     ).to_h
 
-    db.execute("INSERT OR IGNORE INTO house VALUES(:id , :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee", sanitized_data)
+    binding.pry
+
+    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
 end
 
 
