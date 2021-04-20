@@ -7,18 +7,19 @@ class Router
 
   def call(env)
 
-    if env["REQUEST_PATH"] == "OPTIONS"
-      [ 
+    path = env["REQUEST_PATH"]
+    req = Rack::Request.new(env)
+
+    if req.options?
+      return [ 
           200,
 
           {"Content-<type" => "application/json", "
           Access-Control-Allow-Origin" => "*"},
           [{}]
       ]
-      else
+    end
 
-        path = env["REQUEST_PATH"]
-    req = Rack::Request.new(env)
     body = req.body.gets
     params = {}
 
@@ -26,11 +27,11 @@ class Router
     params.merge!(body ? JSON.parse(body) : {}) 
     
     controller.params = params
-    binding.pry
-      case path
-      when  "/"
-        controller.index
-      end
+
+
+    case path
+    when  "/"
+    p controller.index
     end
   end
 end

@@ -13,9 +13,9 @@ class Controller
     attr_accessor :params
 
     def index
-        
+      @maison = Maison::find_by_url(params)
+      binding.pry
     end
-
 
 
     private

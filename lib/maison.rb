@@ -14,11 +14,22 @@ def self.all
     db.execute("SELECT * FROM house")
 end
 
-def self.find_by_url(lien)
-    maison = db.execute("SELECT nom, ville, surface, prix, classe_nrg, annee FROM house WHERE url='#{lien}' LIMIT 1").first
+def self.find_by_url(params)
+    maison = db.execute("SELECT * FROM house WHERE url='#{params}' LIMIT 1").flatten.to_h
+        
+end
 
-    self.new(nom: maison["nom"], ville: maison["ville"], surface: maison["surface"], prix: maison["prix"], classe_nrg: maison["classe_nrg"], annee: maison["annee"])
 
+attr_reader :lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee
+
+def initialize(lien:, nom:, ville:, surface:, prix:, classe_nrg:, annee:)
+    @lien = lien
+    @nom = nom
+    @ville = ville
+    @surface = surface
+    @prix = prix
+    @classe_nrg = classe_nrg
+    @annee = annee
 end
 
 

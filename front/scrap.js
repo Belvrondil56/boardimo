@@ -1,6 +1,8 @@
 document.getElementById("submit-url").addEventListener("click", function (){
     let url = document.getElementById("url").value;
 
+    console.log(url)
+
     fetch('http://localhost:7373/', {
         method: 'POST',
         headers: {
