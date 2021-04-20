@@ -14,11 +14,11 @@ class Router
 
     params.merge!(body ? JSON.parse(body) : {})
     
-
     controller.params = params
     
     case path
     when  "/"
         controller.index
     end
+  end
 end
