@@ -3,6 +3,7 @@ require "open-uri"
 require "pry"
 require "sqlite3"
 
+require "./lib/maison"
 require "./lib/maison_sanitizer"
 
 
@@ -17,7 +18,6 @@ page_questembert = URI.open("#{agences[:questembert]}/NosMaisons.php")
 scrap = Nokogiri::HTML(page_questembert)
 
 liens_maisons = scrap.css("a.card").map { |lien| lien["href"]}
-db = SQLite3::Database.new("boardimo.db")
 
 # QUESTEMBERT
 
@@ -46,9 +46,8 @@ liens_maisons.each do |maison|
       annee: annee
     ).to_h
 
+    Maison::add_maison(sanitized_data)
 
-
-    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
 
 end
 
@@ -87,7 +86,7 @@ liens_maisons.each do |maison|
     ).to_h
 
 
-    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
+    Maison::add_maison(sanitized_data)
 
 end
 
@@ -129,7 +128,7 @@ liens_maisons.each do |maison|
 
     p sanitized_data
 
-    db.execute("INSERT OR IGNORE INTO house VALUES(:lien, :nom, :ville, :surface, :prix, :classe_nrg, :annee)", sanitized_data)
+    Maison::add_maison(sanitized_data)
 end
 
 
