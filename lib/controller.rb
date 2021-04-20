@@ -13,7 +13,7 @@ class Controller
     attr_accessor :params
 
     def index
-                
+        
     end
 
 

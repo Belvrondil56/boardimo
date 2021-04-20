@@ -5,7 +5,7 @@ document.getElementById("submit-url").addEventListener("click", function (){
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'plain//text;charset=UTF-8'
+            'Content-Type': 'plain/text;charset=UTF-8'
         },
         body: JSON.stringify({url: url})
     })
