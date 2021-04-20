@@ -31,7 +31,7 @@ class Router
 
     case path
     when  "/"
-    p controller.index
+    controller.index
     end
   end
 end
