@@ -14,8 +14,12 @@ def self.all
     db.execute("SELECT * FROM house")
 end
 
+def self.find_by_url(lien)
+    maison = db.execute("SELECT nom, ville, surface, prix, classe_nrg, annee FROM house WHERE url='#{lien}' LIMIT 1").first
+
+    self.new(nom: maison["nom"], ville: maison["ville"], surface: maison["surface"], prix: maison["prix"], classe_nrg: maison["classe_nrg"], annee: maison["annee"])
+
+end
 
 
-
-  
 end
