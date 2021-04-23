@@ -19,7 +19,7 @@ class Router
           [{}]
       ]
     end
-
+    #binding.pry
     body = req.body.gets
     params = {}
 
@@ -28,10 +28,21 @@ class Router
     
     controller.params = params
 
+    #binding.pry
+
+    return [ 
+      200,
+
+      {"Content-<type" => "application/json", 
+      "Access-Control-Allow-Origin" => "*"},
+      [{"message" => "salut"}.to_json]
+  ]
 
     case path
     when  "/"
-    controller.index
+    #controller.index
+
+
     end
   end
 end

@@ -14,8 +14,8 @@ def self.all
     db.execute("SELECT * FROM house")
 end
 
-def self.find_by_url(params)
-    maison = db.execute("SELECT * FROM house WHERE url='#{params}' LIMIT 1")
+def self.find_by_url(url)
+    maison = db.execute("SELECT * FROM house WHERE url='#{url}' LIMIT 1")
 end
 
 
